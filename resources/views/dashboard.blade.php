@@ -9,6 +9,7 @@
 
           body { display: flex; min-height: 100vh; background: #f3f4f6; color: #111; }
 
+<<<<<<< HEAD
           .sidebar {
                width: 220px;
                background: #111;
@@ -20,6 +21,19 @@
                height: 100vh;
                position: sticky;
                top: 0;
+=======
+          aside {
+               width:240px;
+               background:#0f172a;
+               color:#fff;
+               padding:25px 20px;
+               display:flex;
+               flex-direction:column;
+               gap:30px;
+               position:sticky;
+               top:0;
+               height:100vh;
+>>>>>>> 8443a6891394839ca84e081da441ff504954d6b6
           }
 
           .brand { font-size: 13px; font-weight: bold; letter-spacing: 1px; }
@@ -119,6 +133,7 @@
      <aside class="sidebar">
           <div class="brand">SERTIFIKASI BNSP</div>
 
+<<<<<<< HEAD
           <nav class="menu">
 
                @if(Auth::user()->role === 'admin')
@@ -135,6 +150,12 @@
 
                @endif
 
+=======
+          <nav>
+               <a href="{{ route('dashboard') }}" class="active">Dashboard</a>
+               <a href="{{ route('skema.index') }}">Skema Sertifikasi</a>
+               <a href="{{ route('peserta.index') }}"class="active">Data Peserta</a>
+>>>>>>> 8443a6891394839ca84e081da441ff504954d6b6
           </nav>
      </aside>
 
@@ -177,4 +198,9 @@
      </div>
 
 </body>
+<<<<<<< HEAD
 </html>
+=======
+
+</html>     
+>>>>>>> 8443a6891394839ca84e081da441ff504954d6b6
