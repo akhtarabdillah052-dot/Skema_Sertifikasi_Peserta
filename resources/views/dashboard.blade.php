@@ -11,7 +11,6 @@
 
           body { display:flex; min-height:100vh; background:#f1f5f9; color:#0f172a; }
 
-          /* ============ SIDEBAR ============ */
           aside {
                width:240px;
                background:#0f172a;
@@ -182,7 +181,7 @@
           <nav>
                <a href="{{ route('dashboard') }}" class="active">Dashboard</a>
                <a href="{{ route('skema.index') }}">Skema Sertifikasi</a>
-               <a href="{{ route('peserta.index') }}">Data Peserta</a>
+               <a href="{{ route('peserta.index') }}"class="active">Data Peserta</a>
           </nav>
      </aside>
 
@@ -230,4 +229,4 @@
 
 </body>
 
-</html>
+</html>     

@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SkemaSertifikasi;
+use App\Models\Peserta;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    Public function index()
+    public function index()
     {
-        return view('dashboard');
+        $totalSkema   = SkemaSertifikasi::count();
+        $totalPeserta = Peserta::count();
+
+        return view('dashboard', compact('totalSkema', 'totalPeserta'));
     }
 }
