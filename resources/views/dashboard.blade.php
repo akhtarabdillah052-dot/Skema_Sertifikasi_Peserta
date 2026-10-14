@@ -1,233 +1,180 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Dashboard Peserta</title>
-
+     <title>Dashboard</title>
      <style>
-          * { margin:0; padding:0; box-sizing:border-box; font-family:"Segoe UI",Tahoma,sans-serif; }
+          * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
 
-          body { display:flex; min-height:100vh; background:#f1f5f9; color:#0f172a; }
+          body { display: flex; min-height: 100vh; background: #f3f4f6; color: #111; }
 
-          /* ============ SIDEBAR ============ */
-          aside {
-               width:240px;
-               background:#0f172a;
-               color:#fff;
-               padding:25px 20px;
-               display:flex;
-               flex-direction:column;
-               gap:30px;
-               position:sticky;
-               top:0;
-               height:100vh;
+          .sidebar {
+               width: 220px;
+               background: #111;
+               color: #fff;
+               padding: 24px 16px;
+               display: flex;
+               flex-direction: column;
+               gap: 24px;
+               height: 100vh;
+               position: sticky;
+               top: 0;
           }
 
-          aside .brand {
-               display:flex;
-               align-items:center;
-               gap:10px;
-               font-size:13px;
-               font-weight:700;
-               letter-spacing:1.5px;
-          }
-          aside .brand::before {
-               content:"V";
-               width:30px; height:30px;
-               background:#1e293b; color:#fff;
-               border-radius:8px;
-               display:flex; justify-content:center; align-items:center;
-               font-size:14px; letter-spacing:0;
+          .brand { font-size: 13px; font-weight: bold; letter-spacing: 1px; }
+
+          .menu { display: flex; flex-direction: column; gap: 4px; }
+
+          .menu a {
+               padding: 9px 12px;
+               font-size: 13px;
+               color: #bbb;
+               text-decoration: none;
+               border-radius: 6px;
           }
 
-          aside nav {
-               display:flex;
-               flex-direction:column;
-               gap:6px;
-          }
-          aside nav a {
-               display:flex;
-               align-items:center;
-               gap:10px;
-               padding:11px 14px;
-               font-size:13px;
-               font-weight:500;
-               color:#94a3b8;
-               text-decoration:none;
-               border-radius:9px;
-               transition:.2s;
-          }
-          aside nav a:hover { background:#1e293b; color:#fff; }
-          aside nav a.active { background:#1e293b; color:#fff; font-weight:600; }
+          .menu a:hover { background: #222; color: #fff; }
+          .menu a.active { background: #222; color: #fff; }
 
-          /* ============ MAIN ============ */
-          .main { flex:1; display:flex; flex-direction:column; }
+          .content { flex: 1; display: flex; flex-direction: column; }
 
-          header {
-               display:flex;
-               justify-content:space-between;
-               align-items:center;
-               padding:18px 35px;
-               background:#fff;
-               border-bottom:1px solid #e2e8f0;
-          }
-          header .hello { font-size:14px; color:#64748b; }
-          header .hello b { color:#0f172a; }
-
-          header button {
-               padding:8px 18px;
-               background:transparent;
-               color:#0f172a;
-               font-size:13px;
-               font-weight:600;
-               border:1px solid #cbd5e1;
-               border-radius:20px;
-               cursor:pointer;
-               transition:.2s;
-          }
-          header button:hover { background:#0f172a; color:#fff; border-color:#0f172a; }
-
-          main {
-               padding:35px;
-               flex:1;
+          .topbar {
+               display: flex;
+               justify-content: space-between;
+               align-items: center;
+               padding: 16px 28px;
+               background: #fff;
+               border-bottom: 1px solid #ddd;
+               font-size: 14px;
           }
 
-          main h1 { font-size:24px; font-weight:700; margin-bottom:6px; }
-          main > p { font-size:14px; color:#64748b; margin-bottom:30px; }
-
-          .alert {
-               background:#fef2f2;
-               color:#991b1b;
-               border-left:4px solid #dc2626;
-               padding:13px 18px;
-               border-radius:10px;
-               margin-bottom:20px;
-               font-size:14px;
+          .topbar button {
+               padding: 6px 14px;
+               border: 1px solid #ccc;
+               background: #fff;
+               border-radius: 4px;
+               cursor: pointer;
           }
 
-          /* ============ CARDS ============ */
+          .page { padding: 28px; flex: 1; }
+          .page h1 { font-size: 22px; margin-bottom: 6px; }
+          .page p { font-size: 14px; color: #666; margin-bottom: 24px; }
+
           .cards {
-               display:grid;
-               grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-               gap:22px;
+               display: grid;
+               grid-template-columns: 1fr 1fr;
+               gap: 16px;
           }
 
           .card {
-               padding:26px;
-               border-radius:16px;
-               color:#fff;
-               position:relative;
-               overflow:hidden;
-               box-shadow:0 10px 30px rgba(15,23,42,.15);
-          }
-          .card::after {
-               content:"";
-               position:absolute;
-               width:130px; height:130px;
-               border-radius:50%;
-               background:rgba(255,255,255,.08);
-               top:-45px; right:-45px;
+               background: #fff;
+               border: 1px solid #ddd;
+               border-radius: 8px;
+               padding: 24px;
           }
 
           .card h3 {
-               font-size:12px;
-               font-weight:600;
-               letter-spacing:1px;
-               text-transform:uppercase;
-               opacity:.8;
-               margin-bottom:20px;
+               font-size: 13px;
+               color: #666;
+               margin-bottom: 12px;
+               font-weight: normal;
           }
 
           .card .number {
-               font-size:44px;
-               font-weight:700;
-               margin-bottom:22px;
+               font-size: 32px;
+               font-weight: bold;
+               margin-bottom: 12px;
           }
 
           .card a {
-               display:inline-block;
-               color:#fff;
-               font-size:13px;
-               font-weight:600;
-               text-decoration:none;
-               border-bottom:1px solid rgba(255,255,255,.4);
-               padding-bottom:2px;
-               transition:.2s;
+               font-size: 13px;
+               color: #111;
           }
-          .card a:hover { border-color:#fff; }
 
-          .dark { background:linear-gradient(135deg,#0f172a,#1e293b); }
-          .gray { background:linear-gradient(135deg,#475569,#64748b); }
+          .alert {
+               padding: 10px 14px;
+               border-radius: 6px;
+               margin-bottom: 16px;
+               font-size: 14px;
+               background: #fee2e2;
+               color: #991b1b;
+               border: 1px solid #fecaca;
+          }
 
-          /* ============ RESPONSIVE ============ */
-          @media (max-width:768px) {
-               body { flex-direction:column; }
-               aside { width:100%; height:auto; position:static; flex-direction:row; justify-content:space-between; align-items:center; padding:15px 20px; }
-               aside nav { flex-direction:row; gap:4px; }
-               aside nav a { padding:8px 12px; font-size:12px; }
-               header { padding:14px 20px; flex-direction:column; gap:10px; align-items:flex-start; }
-               main { padding:20px; }
-               main h1 { font-size:20px; }
+          /* Responsive */
+          @media (max-width: 768px) {
+               body { flex-direction: column; }
+               .sidebar { width: 100%; height: auto; position: static; flex-direction: row; justify-content: space-between; align-items: center; padding: 14px 16px; }
+               .menu { flex-direction: row; }
+               .menu a { padding: 6px 10px; font-size: 12px; }
+               .topbar { flex-direction: column; align-items: stretch; gap: 10px; }
+               .page { padding: 16px; }
+               .cards { grid-template-columns: 1fr; }
           }
      </style>
 </head>
-
 <body>
 
-     <aside>
+     <aside class="sidebar">
           <div class="brand">SERTIFIKASI BNSP</div>
 
-          <nav>
-               <a href="{{ route('dashboard') }}" class="active">Dashboard</a>
-               <a href="{{ route('skema.index') }}">Skema Sertifikasi</a>
-               <a href="{{ route('peserta.index') }}">Data Peserta</a>
+          <nav class="menu">
+
+               @if(Auth::user()->role === 'admin')
+
+                    {{-- Menu Admin --}}
+                    <a href="{{ route('dashboard') }}" class="active">Dashboard</a>
+                    <a href="{{ route('skema.index') }}">Skema Sertifikasi</a>
+                    <a href="{{ route('peserta.index') }}">Data Peserta</a>
+
+               @else
+
+                    {{-- Menu User Biasa --}}
+                    <a href="{{ route('peserta-saya.index') }}" class="active">Peserta Saya</a>
+
+               @endif
+
           </nav>
      </aside>
 
-     <div class="main">
+     <div class="content">
 
-          <header>
-               <div class="hello">
-                    Halo, <b>{{ Auth::user()->name ?? Auth::user()->email ?? 'Admin' }}</b>
-               </div>
-
+          <div class="topbar">
+               <div>Halo, <b>{{ Auth::user()->name ?? Auth::user()->email ?? 'Admin' }}</b></div>
                <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit">Logout</button>
                </form>
-          </header>
+          </div>
 
-          <main>
-               <h1>Selamat Datang di Aplikasi Pengelolaan Data Peserta</h1>
-               <p>Ringkasan data sistem sertifikasi kompetensi.</p>
+          <main class="page">
+
+               <h1>Dashboard</h1>
+               <p>Ringkasan data sistem sertifikasi.</p>
 
                @if(session('error'))
-               <div class="alert">
-                    {{ session('error') }}
-               </div>
+                    <div class="alert">{{ session('error') }}</div>
                @endif
 
                <div class="cards">
 
-                    <div class="card dark">
+                    <div class="card">
                          <h3>Total Skema Sertifikasi</h3>
                          <div class="number">{{ $totalSkema }}</div>
-                         <a href="{{ route('skema.index') }}">Lihat Detail</a>
+                         <a href="{{ route('skema.index') }}">Lihat detail →</a>
                     </div>
 
-                    <div class="card gray">
+                    <div class="card">
                          <h3>Total Peserta Terdaftar</h3>
                          <div class="number">{{ $totalPeserta }}</div>
-                         <a href="{{ route('peserta.index') }}">Lihat Detail</a>
+                         <a href="{{ route('peserta.index') }}">Lihat detail →</a>
                     </div>
 
                </div>
-          </main>
 
+          </main>
      </div>
 
 </body>
-
 </html>

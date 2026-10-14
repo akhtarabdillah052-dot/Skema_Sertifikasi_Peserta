@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\SkemaSertifikasi;
+use App\Models\Peserta;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    Public function index()
+    public function index()
     {
-        return view('dashboard');
+        if (Auth::user()->role === 'user') {
+            return redirect()->route('peserta-saya.index');
+        }
+
+        $totalSkema   = SkemaSertifikasi::count();
+        $totalPeserta = Peserta::count();
+
+        return view('dashboard', compact('totalSkema', 'totalPeserta'));
     }
 }

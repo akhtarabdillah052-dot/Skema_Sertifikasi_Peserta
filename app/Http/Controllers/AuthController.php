@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash; 
-use App\Models\User;                 
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use App\Models\Peserta;
 use App\Models\SkemaSertifikasi;
 
@@ -13,7 +13,6 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        // 1. Jika pengguna sudah login, langsung alihkan ke dashboard
         if (Auth::check()) {
             return  redirect()->route('dashboard');
         }
@@ -28,7 +27,6 @@ class AuthController extends Controller
         'password' => ['required'],
     ]);
 
-    // Mengubah input email ke lowercase agar tidak bermasalah dengan case-sensitive
     $credentials['email'] = strtolower($credentials['email']);
 
     if (Auth::attempt($credentials, $request->boolean('remember'))) {
@@ -47,7 +45,7 @@ class AuthController extends Controller
         // 2. Proteksi Manual: Tendang ke halaman login jika belum login
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
-        }   
+        }
 
         $totalPeserta = Peserta::count();
         $totalSkema = SkemaSertifikasi::count();

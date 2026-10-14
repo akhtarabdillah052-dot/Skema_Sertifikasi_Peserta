@@ -12,10 +12,12 @@ class PesertaController extends Controller
     {
         $query = Peserta::with('skema');
 
-        if ($request->has('cari')) {
+        if ($request->has('cari') && $request->cari != '') {
             $keyword = $request->cari;
-            $query->where('nama_peserta', 'LIKE', "%$keyword%")
+            $query->where(function ($q) use ($keyword) {
+                $q->where('nama_peserta', 'LIKE', "%$keyword%")
                   ->orWhere('email', 'LIKE', "%$keyword%");
+            });
         }
 
         $pesertas = $query->get();
@@ -31,15 +33,17 @@ class PesertaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'skema_id' => 'required|exists:skema_sertifikasi,id',
+            'skema_id'     => 'required|exists:skema_sertifikasi,id',
             'nama_peserta' => 'required',
-            'alamat' => 'required',
-            'no_hp' => 'required',
-            'email' => 'required|email|unique:peserta,email',
+            'alamat'       => 'required',
+            'no_hp'        => 'required',
+            'email'        => 'required|email|unique:pesertas,email',
         ]);
 
         Peserta::create($request->all());
-        return redirect()->route('peserta.index')->with('success', 'Peserta berhasil didaftarkan.');
+
+        return redirect()->route('peserta.index')
+                         ->with('success', 'Peserta berhasil didaftarkan.');
     }
 
     public function show($id)
@@ -51,39 +55,40 @@ class PesertaController extends Controller
     public function edit($id)
     {
         $peserta = Peserta::findOrFail($id);
-        $skemas = SkemaSertifikasi::all();
+        $skemas  = SkemaSertifikasi::all();
         return view('peserta.edit', compact('peserta', 'skemas'));
     }
 
-   public function update(Request $request, $id)
-{
-    $request->validate([
-        'skema_id' => 'required|exists:skema_sertifikasi,id',
-        'nama_peserta' => 'required',
-        'alamat' => 'required',
-        'no_hp' => 'required',
-        'email' => 'required|email|unique:peserta,email,' . $id,
-    ]);
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'skema_id'     => 'required|exists:skema_sertifikasi,id',
+            'nama_peserta' => 'required',
+            'alamat'       => 'required',
+            'no_hp'        => 'required',
+            'email'        => 'required|email|unique:pesertas,email,' . $id,
+        ]);
 
-    $peserta = Peserta::findOrFail($id);
+        $peserta = Peserta::findOrFail($id);
 
-    $peserta->update([
-        'skema_id' => $request->skema_id,
-        'nama_peserta' => $request->nama_peserta,
-        'alamat' => $request->alamat,
-        'no_hp' => $request->no_hp,
-        'email' => $request->email,
-    ]);
+        $peserta->update([
+            'skema_id'     => $request->skema_id,
+            'nama_peserta' => $request->nama_peserta,
+            'alamat'       => $request->alamat,
+            'no_hp'        => $request->no_hp,
+            'email'        => $request->email,
+        ]);
 
-    return redirect()->route('peserta.index')
-        ->with('success', 'Data peserta berhasil diperbarui.');
-}
+        return redirect()->route('peserta.index')
+                         ->with('success', 'Data peserta berhasil diperbarui.');
+    }
 
     public function destroy($id)
     {
         $peserta = Peserta::findOrFail($id);
         $peserta->delete();
-        return redirect()->route('peserta.index')->with('success', 'Peserta berhasil dihapus.');
+
+        return redirect()->route('peserta.index')
+                         ->with('success', 'Peserta berhasil dihapus.');
     }
 }
- 

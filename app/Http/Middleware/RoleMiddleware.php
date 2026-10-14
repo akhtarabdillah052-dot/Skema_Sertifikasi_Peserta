@@ -19,7 +19,7 @@ class RoleMiddleware
     {
         // Pastikan user sudah login
         if (!Auth::check()) {
-            return redirect()->route(' login');
+            return redirect()->route('login');
         }
 
         // Cek apakah role user termasuk yang diizinkan

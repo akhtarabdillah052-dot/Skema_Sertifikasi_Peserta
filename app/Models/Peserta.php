@@ -3,18 +3,25 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo; 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Peserta extends Model
 {
 
-     protected $table = 'pesertas'; 
+    protected $table = 'pesertas';
 
-    protected $fillable = ['skema_id', 'nama_peserta', 'alamat', 'no_hp', 'email'];
 
-     public function skema(): BelongsTo
+    protected $fillable = [
+        'user_id',
+        'skema_id',
+        'nama_peserta',
+        'alamat',
+        'no_hp',
+        'email',
+    ];
+
+  public function skema()
     {
-       
-        return $this->belongsTo(SkemaSertifikasi::class, 'skema_id'); 
+        return $this->belongsTo(SkemaSertifikasi::class, 'skema_id');
     }
 }
