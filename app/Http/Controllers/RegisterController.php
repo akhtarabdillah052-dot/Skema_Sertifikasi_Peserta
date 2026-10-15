@@ -9,23 +9,17 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-<<<<<<< HEAD
-=======
     /**
      * Tampilkan form register.
      */
->>>>>>> 8443a6891394839ca84e081da441ff504954d6b6
     public function show()
     {
         return view('auth.register');
     }
 
-<<<<<<< HEAD
-=======
     /**
      * Simpan user baru.
      */
->>>>>>> 8443a6891394839ca84e081da441ff504954d6b6
     public function store(Request $request)
     {
         $request->validate([
@@ -34,7 +28,6 @@ class RegisterController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
-<<<<<<< HEAD
         $role = 'user';
 
         if (
@@ -56,17 +49,3 @@ class RegisterController extends Controller
         return redirect()->route('dashboard')->with('success', 'Registrasi berhasil!');
     }
 }
-=======
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'role'     => 'user', // ✅ default user
-        ]);
-
-        Auth::login($user);
-
-        return redirect()->route('dashboard')->with('success', 'Registrasi berhasil!');
-    }
-}
->>>>>>> 8443a6891394839ca84e081da441ff504954d6b6

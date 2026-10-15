@@ -15,17 +15,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-<<<<<<< HEAD
-        'role',
-    ];
-
-
-=======
         'role', 
     ];
 
     
->>>>>>> 8443a6891394839ca84e081da441ff504954d6b6
     protected $hidden = [
         'password',
         'remember_token',
@@ -47,8 +40,4 @@ class User extends Authenticatable
     {
         return $this->role === 'user';
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8443a6891394839ca84e081da441ff504954d6b6

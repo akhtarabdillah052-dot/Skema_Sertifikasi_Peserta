@@ -11,12 +11,22 @@ class PesertaSayaController extends Controller
 {
 
     public function index()
-    {
-        $peserta = Peserta::where('user_id', Auth::id())->first();
-        $skemas  = SkemaSertifikasi::all();
+{
+    $peserta = Peserta::where(function ($q) {
+        $q->where('user_id', Auth::id())
+          ->orWhere('email', Auth::user()->email);
+    })->first();
 
-        return view('peserta-saya.index', compact('peserta', 'skemas'));
+    // AUTO-LINK
+    if ($peserta && is_null($peserta->user_id)) {
+        $peserta->user_id = Auth::id();
+        $peserta->save();
     }
+
+    $skemas = SkemaSertifikasi::all();
+
+    return view('peserta-saya.index', compact('peserta', 'skemas'));
+}
 
     public function store(Request $request)
     {

@@ -23,7 +23,7 @@ class AuthController extends Controller
    public function login(Request $request)
 {
     $credentials = $request->validate([
-        'email' => ['required', 'email'],
+        'email'    => ['required', 'email'],
         'password' => ['required'],
     ]);
 
@@ -32,7 +32,34 @@ class AuthController extends Controller
     if (Auth::attempt($credentials, $request->boolean('remember'))) {
         $request->session()->regenerate();
 
-        return redirect()->intended('dashboard');
+        $user = Auth::user();
+
+        // Admin → dashboard
+        if ($user->role === 'admin') {
+            return redirect()->intended('dashboard');
+        }
+
+        // User biasa → cek apakah sudah terdaftar sebagai peserta
+        // (bisa lewat user_id ATAU cocokkan email)
+        $peserta = Peserta::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+              ->orWhere('email', $user->email);
+        })->first();
+
+        if ($peserta) {
+            // Auto-link user_id kalau peserta diinput manual oleh admin
+            if (!$peserta->user_id) {
+                $peserta->user_id = $user->id;
+                $peserta->save();
+            }
+
+            return redirect()->route('peserta-saya.index')
+                ->with('success', 'Selamat datang! Anda sudah terdaftar sebagai peserta sertifikasi.');
+        }
+
+        // Belum terdaftar sebagai peserta → ke halaman daftar peserta
+        return redirect()->route('peserta-saya.index')
+            ->with('info', 'Anda belum terdaftar sebagai peserta. Silakan lengkapi data di bawah.');
     }
 
     return back()->withErrors([
@@ -64,6 +91,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('home');
     }
 }
