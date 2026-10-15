@@ -10,17 +10,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin
-        User::updateOrCreate(
-            ['email' => 'admin@sekolah.sch.id'],
-            [
-                'name'     => 'Administrator',
-                'password' => Hash::make('password123'),
-                'role'     => 'admin',
-            ]
-        );
-
-        // User biasa
         User::updateOrCreate(
             ['email' => 'user@email.com'],
             [
@@ -29,6 +18,11 @@ class DatabaseSeeder extends Seeder
                 'role'     => 'user',
             ]
         );
+        // Admin
+        $this->call([AdminSeeder::class]);
+
+        // User biasa
+
 
         $this->call([
             SkemaSeeder::class,

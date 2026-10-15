@@ -102,6 +102,9 @@
             <a href="{{ route('dashboard') }}">Dashboard</a>
             <a href="{{ route('skema.index') }}">Skema Sertifikasi</a>
             <a href="{{ route('peserta.index') }}" class="active">Data Peserta</a>
+            <a href="{{ route('admin.dokumen.index') }}">
+                Verifikasi Dokumen
+            </a>
         </nav>
     </aside>
 
@@ -129,7 +132,6 @@
                 <h2>Data Peserta</h2>
                 <div>
                     <a href="{{ route('dashboard') }}" class="btn btn-gray">Kembali</a>
-                    <a href="{{ route('peserta.create') }}" class="btn btn-outline">Tambah Peserta</a>
                 </div>
             </div>
 

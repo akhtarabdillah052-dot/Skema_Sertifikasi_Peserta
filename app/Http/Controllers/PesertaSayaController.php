@@ -9,52 +9,67 @@ use Illuminate\Support\Facades\Auth;
 
 class PesertaSayaController extends Controller
 {
-
     public function index()
-{
-    $peserta = Peserta::where(function ($q) {
-        $q->where('user_id', Auth::id())
-          ->orWhere('email', Auth::user()->email);
-    })->first();
+    {
+        $user = Auth::user();
 
-    // AUTO-LINK
-    if ($peserta && is_null($peserta->user_id)) {
-        $peserta->user_id = Auth::id();
-        $peserta->save();
+        $peserta = Peserta::with(['skema', 'dokumen'])
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhere('email', $user->email);
+            })
+            ->first();
+
+        // Hubungkan peserta dengan akun yang sedang login.
+        if ($peserta && !$peserta->user_id) {
+            $peserta->user_id = $user->id;
+            $peserta->save();
+        }
+
+        $skemas = SkemaSertifikasi::all();
+
+        return view('peserta-saya.index', compact('peserta', 'skemas'));
     }
-
-    $skemas = SkemaSertifikasi::all();
-
-    return view('peserta-saya.index', compact('peserta', 'skemas'));
-}
 
     public function store(Request $request)
     {
-        if (Peserta::where('user_id', Auth::id())->exists()) {
-            return redirect()->route('peserta-saya.index')
+        $user = Auth::user();
+
+        // Cegah peserta mendaftar lebih dari sekali.
+        $sudahTerdaftar = Peserta::where('user_id', $user->id)
+            ->orWhere('email', $user->email)
+            ->exists();
+
+        if ($sudahTerdaftar) {
+            return redirect()
+                ->route('peserta-saya.index')
                 ->with('error', 'Anda sudah terdaftar sebagai peserta.');
         }
 
-        $request->validate([
-            'skema_id'     => 'required|exists:skema_sertifikasi,id',
+        // Validasi sesuai field pada model Peserta.
+        $validated = $request->validate([
+            'skema_id' => 'required|exists:skema_sertifikasi,id',
             'nama_peserta' => 'required|string|max:255',
-            'alamat'       => 'required|string',
-            'no_hp'        => 'required|string|max:20',
-            'email'        => 'required|email|unique:pesertas,email',
+            'alamat' => 'required|string',
+            'no_hp' => 'required|string|max:20',
+            'email' => 'required|email|unique:pesertas,email',
         ]);
 
-        Peserta::create([
-            'user_id'      => Auth::id(),
-            'skema_id'     => $request->skema_id,
-            'nama_peserta' => $request->nama_peserta,
-            'alamat'       => $request->alamat,
-            'no_hp'        => $request->no_hp,
-            'email'        => $request->email,
-        ]);
+        // Simpan hanya field yang tersedia pada model Peserta.
+        $peserta = new Peserta();
 
-        return redirect()->route('peserta-saya.index')
+        $peserta->user_id = $user->id;
+        $peserta->skema_id = $validated['skema_id'];
+        $peserta->nama_peserta = $validated['nama_peserta'];
+        $peserta->alamat = $validated['alamat'];
+        $peserta->no_hp = $validated['no_hp'];
+        $peserta->email = $validated['email'];
+
+        $peserta->save();
+
+        return redirect()
+            ->route('peserta-saya.index')
             ->with('success', 'Pendaftaran peserta berhasil!');
     }
-
-    
 }
+

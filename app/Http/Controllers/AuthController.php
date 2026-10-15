@@ -34,20 +34,19 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        // Admin → dashboard
+        // 1. CEK APAKAH USER ADALAH ADMIN
         if ($user->role === 'admin') {
-            return redirect()->intended('dashboard');
+            return redirect()->route('dashboard')
+                ->with('success', 'Selamat datang kembali, Admin!');
         }
 
-        // User biasa → cek apakah sudah terdaftar sebagai peserta
-        // (bisa lewat user_id ATAU cocokkan email)
+        // 2. JIKA BUKAN ADMIN (USER BIASA), BARU CEK PESERTA
         $peserta = Peserta::where(function ($q) use ($user) {
             $q->where('user_id', $user->id)
               ->orWhere('email', $user->email);
         })->first();
 
         if ($peserta) {
-            // Auto-link user_id kalau peserta diinput manual oleh admin
             if (!$peserta->user_id) {
                 $peserta->user_id = $user->id;
                 $peserta->save();
@@ -57,7 +56,6 @@ class AuthController extends Controller
                 ->with('success', 'Selamat datang! Anda sudah terdaftar sebagai peserta sertifikasi.');
         }
 
-        // Belum terdaftar sebagai peserta → ke halaman daftar peserta
         return redirect()->route('peserta-saya.index')
             ->with('info', 'Anda belum terdaftar sebagai peserta. Silakan lengkapi data di bawah.');
     }

@@ -10,14 +10,14 @@ public function up(): void
 {
     Schema::create('pesertas', function (Blueprint $table) {
         $table->id();
-        
+
         // Tambahkan kolom-kolom berikut:
-        $table->unsignedBigInteger('skema_id'); 
+        $table->unsignedBigInteger('skema_id');
         $table->string('nama_peserta');
         $table->text('alamat');
         $table->string('no_hp');
         $table->string('email')->unique();
-        
+
         $table->timestamps();
 
         // (Opsional) Jika ingin menambahkan foreign key constraint ke tabel skema:

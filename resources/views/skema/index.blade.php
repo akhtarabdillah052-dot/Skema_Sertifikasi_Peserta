@@ -161,6 +161,9 @@
                <a href="{{ route('dashboard') }}">Dashboard</a>
                <a href="{{ route('skema.index') }}" class="active">Skema Sertifikasi</a>
                <a href="{{ route('peserta.index') }}">Data Peserta</a>
+               <a href="{{ route('admin.dokumen.index') }}">
+                Verifikasi Dokumen
+            </a>
           </nav>
      </aside>
 
